@@ -1,0 +1,24 @@
+{
+  "name": "budget-tracker-fullstack",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Full-stack budget tracker monorepo (Express + React + PostgreSQL)",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "docker compose up --build",
+    "dev:down": "docker compose down",
+    "dev:api": "npm run dev --workspace=@budget-tracker/api",
+    "dev:frontend": "npm run dev --workspace=@budget-tracker/frontend",
+    "build": "npm run build --workspaces --if-present",
+    "migrate": "npm run migrate --workspace=@budget-tracker/api",
+    "docker:build": "docker build -t budget-tracker:latest .",
+    "docker:run": "docker run -p 3000:3000 --env-file .env budget-tracker:latest",
+    "backup": "bash scripts/backup.sh",
+    "restore": "bash scripts/restore.sh"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
