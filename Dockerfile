@@ -15,8 +15,8 @@ RUN npm install --workspaces --include-workspace-root
 FROM node:20-alpine AS frontend-build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages/frontend/node_modules ./packages/frontend/node_modules
 COPY --from=deps /app/package.json /app/package-lock.json* ./
+COPY --from=deps /app/packages/frontend/package.json ./packages/frontend/
 COPY --from=deps /app/packages/frontend ./packages/frontend
 ARG VITE_API_URL=/
 ENV VITE_API_URL=$VITE_API_URL
@@ -28,8 +28,8 @@ RUN npm run build --workspace=@budget-tracker/frontend
 FROM node:20-alpine AS api-build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/packages/api/node_modules ./packages/api/node_modules
 COPY --from=deps /app/package.json /app/package-lock.json* ./
+COPY --from=deps /app/packages/api/package.json ./packages/api/
 COPY --from=deps /app/packages/api ./packages/api
 RUN npm run build --workspace=@budget-tracker/api
 
