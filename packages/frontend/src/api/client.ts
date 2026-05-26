@@ -17,7 +17,7 @@ export interface Transaction {
 export type NewTransaction = Omit<Transaction, 'id'>
 
 const BASE_URL: string =
-  (import.meta.env.VITE_API_URL as string | undefined) ?? 'http://localhost:3000'
+  (import.meta.env.VITE_API_URL as string | undefined) ?? ''
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
