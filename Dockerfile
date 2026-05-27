@@ -1,12 +1,11 @@
 # syntax=docker/dockerfile:1.6
 
 ############################
-# Stage 1: Clone repo and install deps
+# Stage 1: Install deps from local source
 ############################
 FROM node:20-alpine AS deps
 WORKDIR /app
-RUN apk add --no-cache git
-RUN git clone https://github.com/MenokoOG/budget-tracker-fullstack.git .
+COPY . .
 RUN npm install --workspaces --include-workspace-root
 
 ############################
@@ -15,11 +14,10 @@ RUN npm install --workspaces --include-workspace-root
 FROM node:20-alpine AS frontend-build
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=deps /app/package.json /app/package-lock.json* ./
-COPY --from=deps /app/packages/frontend/package.json ./packages/frontend/
-COPY --from=deps /app/packages/frontend ./packages/frontend
+COPY package.json package-lock.json* ./
+COPY packages/frontend ./packages/frontend
 ARG VITE_API_URL=/
-ENV VITE_API_URL=$VITE_API_URL
+ENV VITE_API_URL=${VITE_API_URL}
 RUN npm run build --workspace=@budget-tracker/frontend
 
 ############################
