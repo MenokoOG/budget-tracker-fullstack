@@ -17,7 +17,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json package-lock.json* ./
 COPY packages/frontend ./packages/frontend
-ARG VITE_API_URL=/
+ARG VITE_API_URL=""
 ENV VITE_API_URL=${VITE_API_URL}
 RUN echo "Building frontend with VITE_API_URL=${VITE_API_URL}" && npm run build --workspace=@budget-tracker/frontend
 

@@ -16,8 +16,11 @@ export interface Transaction {
 
 export type NewTransaction = Omit<Transaction, 'id'>
 
-const BASE_URL: string =
+// Strip trailing slash so BASE_URL + "/api/..." never produces "//api/...",
+// which the browser would parse as a protocol-relative URL to host "api".
+const BASE_URL: string = (
   (import.meta.env.VITE_API_URL as string | undefined) ?? ''
+).replace(/\/+$/, '')
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE_URL}${path}`, {
