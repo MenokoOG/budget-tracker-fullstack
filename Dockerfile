@@ -13,12 +13,13 @@ RUN npm install --workspaces --include-workspace-root
 ############################
 FROM node:20-alpine AS frontend-build
 WORKDIR /app
+# Cache invalidation: 2026-05-27 VITE_API_URL fix
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json package-lock.json* ./
 COPY packages/frontend ./packages/frontend
 ARG VITE_API_URL=/
 ENV VITE_API_URL=${VITE_API_URL}
-RUN npm run build --workspace=@budget-tracker/frontend
+RUN echo "Building frontend with VITE_API_URL=${VITE_API_URL}" && npm run build --workspace=@budget-tracker/frontend
 
 ############################
 # Stage 3: build api
