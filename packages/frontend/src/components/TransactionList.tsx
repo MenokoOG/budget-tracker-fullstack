@@ -37,7 +37,7 @@ export function TransactionList({ transactions, categories, onDeleteTransaction,
 
   if (transactions.length === 0) {
     return (
-      <div className="relative rounded-xl overflow-hidden shadow-2xl">
+      <div className="relative rounded-xl overflow-hidden shadow-2xl mt-6">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-700/60 via-slate-800 to-slate-900 border border-slate-700/60"></div>
         <div className="relative z-10 p-8 text-center">
           <p className="text-slate-300 font-medium">No transactions yet. Add one to get started!</p>
@@ -47,12 +47,59 @@ export function TransactionList({ transactions, categories, onDeleteTransaction,
   }
 
   return (
-    <div className="relative rounded-xl overflow-hidden shadow-2xl">
+    <div className="relative rounded-xl overflow-hidden shadow-2xl mt-6">
       {/* Gradient background */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-700/60 via-slate-800 to-slate-900 border border-slate-700/60"></div>
 
-      {/* Content */}
-      <div className="relative z-10">
+      {/* Mobile: card list */}
+      <ul className="md:hidden relative z-10 divide-y divide-slate-700/40">
+        {sortedTransactions.map((transaction) => (
+          <li key={transaction.id} className="p-4 flex items-start gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                <span
+                  className="inline-block px-2 py-0.5 rounded-md text-white text-[11px] font-bold shadow-sm"
+                  style={{ backgroundColor: getCategoryColor(transaction.categoryId) }}
+                >
+                  {getCategoryName(transaction.categoryId)}
+                </span>
+                <span className="text-xs text-slate-400 font-medium">
+                  {new Date(transaction.date).toLocaleDateString()}
+                </span>
+              </div>
+              {transaction.note && (
+                <p className="text-sm text-slate-300 truncate">{transaction.note}</p>
+              )}
+            </div>
+            <div className="flex flex-col items-end gap-2 shrink-0">
+              <span className={`text-base font-bold ${
+                transaction.type === 'income' ? 'text-emerald-400' : 'text-orange-400'
+              }`}>
+                {transaction.type === 'income' ? '+' : '-'}${transaction.amount.toFixed(2)}
+              </span>
+              <div className="flex gap-1">
+                <button
+                  onClick={() => onEditTransaction(transaction.id)}
+                  className="text-slate-400 hover:text-indigo-400 active:text-indigo-300 rounded-lg p-2 -m-2"
+                  aria-label="Edit transaction"
+                >
+                  <Edit2 size={18} />
+                </button>
+                <button
+                  onClick={() => onDeleteTransaction(transaction.id)}
+                  className="text-slate-400 hover:text-red-400 active:text-red-300 rounded-lg p-2 -m-2"
+                  aria-label="Delete transaction"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      {/* Desktop: table */}
+      <div className="hidden md:block relative z-10">
         <table className="w-full">
           <thead className="bg-slate-800/50 border-b border-slate-700/60">
             <tr>

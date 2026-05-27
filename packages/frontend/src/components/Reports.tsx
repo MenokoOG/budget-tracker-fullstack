@@ -93,11 +93,11 @@ export function Reports({ transactions, categories }: ReportsProps) {
   }, [transactions])
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Overall Stats */}
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
         <div className="relative rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-emerald-600/30 via-slate-800 to-slate-900 border border-emerald-600/40">
-          <div className="relative z-10 p-6">
+          <div className="relative z-10 p-4 sm:p-6">
             <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">Total Income</p>
             <p className="text-2xl font-bold text-emerald-400">
               ${stats.totalIncome.toFixed(2)}
@@ -106,7 +106,7 @@ export function Reports({ transactions, categories }: ReportsProps) {
           </div>
         </div>
         <div className="relative rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-red-600/30 via-slate-800 to-slate-900 border border-red-600/40">
-          <div className="relative z-10 p-6">
+          <div className="relative z-10 p-4 sm:p-6">
             <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">Total Expenses</p>
             <p className="text-2xl font-bold text-red-400">
               ${stats.totalExpense.toFixed(2)}
@@ -115,7 +115,7 @@ export function Reports({ transactions, categories }: ReportsProps) {
           </div>
         </div>
         <div className="relative rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-indigo-600/30 via-slate-800 to-slate-900 border border-indigo-600/40">
-          <div className="relative z-10 p-6">
+          <div className="relative z-10 p-4 sm:p-6">
             <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">Avg Monthly</p>
             <p className="text-2xl font-bold text-indigo-400">
               ${stats.avgMonthlyExpense.toFixed(2)}
@@ -127,7 +127,7 @@ export function Reports({ transactions, categories }: ReportsProps) {
 
       {/* Monthly Breakdown */}
       <div className="relative rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-700/60 via-slate-800 to-slate-900 border border-slate-700/60">
-        <div className="relative z-10 p-8">
+        <div className="relative z-10 p-4 sm:p-8">
           <h3 className="text-sm font-bold text-slate-200 mb-6 uppercase tracking-wider">12-Month Breakdown</h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -168,7 +168,7 @@ export function Reports({ transactions, categories }: ReportsProps) {
 
       {/* Category Breakdown */}
       <div className="relative rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-700/60 via-slate-800 to-slate-900 border border-slate-700/60">
-        <div className="relative z-10 p-8">
+        <div className="relative z-10 p-4 sm:p-8">
           <h3 className="text-sm font-bold text-slate-200 mb-6 uppercase tracking-wider">Spending by Category</h3>
           {categorySpending.length === 0 ? (
             <p className="text-slate-400">No expenses yet.</p>

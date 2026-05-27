@@ -238,16 +238,16 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Summary Cards - Reorganized by importance */}
-      <div className="grid grid-cols-5 gap-4">
-        {/* Primary Card: Balance */}
-        <div className={`relative rounded-xl overflow-hidden shadow-2xl ${
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+        {/* Primary Card: Balance — full row on mobile so it reads first */}
+        <div className={`col-span-2 sm:col-span-3 lg:col-span-1 relative rounded-xl overflow-hidden shadow-2xl ${
           balance >= 0
             ? 'bg-gradient-to-br from-emerald-600/40 via-slate-800 to-slate-900'
             : 'bg-gradient-to-br from-red-600/40 via-slate-800 to-slate-900'
         } border border-slate-700/60`}>
-          <div className="relative z-10 p-6">
+          <div className="relative z-10 p-4 sm:p-6">
             <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">Balance</p>
             <p
               className={`text-3xl font-bold ${
@@ -266,7 +266,7 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
 
         {/* Secondary Cards */}
         <div className="relative rounded-xl overflow-hidden shadow-xl bg-gradient-to-br from-emerald-600/30 via-slate-800 to-slate-900 border border-emerald-600/40">
-          <div className="relative z-10 p-6">
+          <div className="relative z-10 p-4 sm:p-6">
             <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">Income</p>
             <p className="text-2xl font-bold text-emerald-400">
               ${totalIncome.toFixed(2)}
@@ -275,7 +275,7 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
           </div>
         </div>
         <div className="relative rounded-xl overflow-hidden shadow-xl bg-gradient-to-br from-orange-600/30 via-slate-800 to-slate-900 border border-orange-600/40">
-          <div className="relative z-10 p-6">
+          <div className="relative z-10 p-4 sm:p-6">
             <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">Expenses</p>
             <p className="text-2xl font-bold text-orange-400">
               ${totalSpent.toFixed(2)}
@@ -284,7 +284,7 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
           </div>
         </div>
         <div className="relative rounded-xl overflow-hidden shadow-xl bg-gradient-to-br from-indigo-600/30 via-slate-800 to-slate-900 border border-indigo-600/40">
-          <div className="relative z-10 p-6">
+          <div className="relative z-10 p-4 sm:p-6">
             <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">This Month</p>
             <p className="text-2xl font-bold text-indigo-400">
               ${thisMonthSpent.toFixed(2)}
@@ -297,7 +297,7 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
             ? 'bg-gradient-to-br from-red-600/30 via-slate-800 to-slate-900 border-red-600/40'
             : 'bg-gradient-to-br from-emerald-600/30 via-slate-800 to-slate-900 border-emerald-600/40'
         }`}>
-          <div className="relative z-10 p-6">
+          <div className="relative z-10 p-4 sm:p-6">
             <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">MoM Change</p>
             <p
               className={`text-2xl font-bold ${
@@ -311,11 +311,11 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
         </div>
       </div>
 
-      {/* Charts Grid - More compact */}
-      <div className="grid grid-cols-2 gap-6">
+      {/* Charts Grid - stacks on mobile */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Monthly Trend */}
         <div className="relative rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-700/60 via-slate-800 to-slate-900 border border-slate-700/60">
-          <div className="relative z-10 p-6">
+          <div className="relative z-10 p-4 sm:p-6">
             <h3 className="text-sm font-bold text-slate-200 mb-4 uppercase tracking-wider">
               6-Month Trend
             </h3>
@@ -325,7 +325,7 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
 
         {/* Weekly Breakdown */}
         <div className="relative rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-700/60 via-slate-800 to-slate-900 border border-slate-700/60">
-          <div className="relative z-10 p-6">
+          <div className="relative z-10 p-4 sm:p-6">
             <h3 className="text-sm font-bold text-slate-200 mb-4 uppercase tracking-wider">
               Weekly Breakdown
             </h3>
@@ -342,7 +342,7 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
 
         {/* Top Categories */}
         <div className="relative rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-700/60 via-slate-800 to-slate-900 border border-slate-700/60 col-span-2">
-          <div className="relative z-10 p-6">
+          <div className="relative z-10 p-4 sm:p-6">
             <h3 className="text-sm font-bold text-slate-200 mb-4 uppercase tracking-wider">
               Top 5 Categories
             </h3>

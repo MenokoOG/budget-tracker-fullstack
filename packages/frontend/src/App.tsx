@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { LayoutDashboard, ArrowLeftRight, Tag, BarChart3, Target } from 'lucide-react'
 import './App.css'
 import { TransactionForm } from './components/TransactionForm'
 import { TransactionList } from './components/TransactionList'
@@ -11,6 +12,14 @@ import { api, type Category, type Transaction } from './api/client'
 export type { Category, Transaction }
 
 type Tab = 'dashboard' | 'transactions' | 'categories' | 'reports' | 'budgets'
+
+const TABS: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'transactions', label: 'Transactions', icon: ArrowLeftRight },
+  { id: 'categories', label: 'Categories', icon: Tag },
+  { id: 'reports', label: 'Reports', icon: BarChart3 },
+  { id: 'budgets', label: 'Budgets', icon: Target },
+]
 
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('dashboard')
@@ -99,34 +108,38 @@ function App() {
     }
   }
 
+  const activeMeta = TABS.find((t) => t.id === activeTab)!
+
   return (
     <div className="min-h-screen bg-slate-900 text-white">
-      <header className="bg-slate-800 border-b border-slate-700 px-8 py-6">
-        <h1 className="text-3xl font-bold text-indigo-400">Budget Tracker</h1>
-        <p className="text-slate-400 text-sm mt-1">Track your finances with ease</p>
+      <header className="bg-slate-800 border-b border-slate-700 px-4 py-4 sm:px-8 sm:py-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-indigo-400">Budget Tracker</h1>
+        <p className="hidden sm:block text-slate-400 text-sm mt-1">Track your finances with ease</p>
       </header>
 
-      <nav className="bg-slate-800 border-b border-slate-700 px-8">
+      {/* Desktop tabs */}
+      <nav className="hidden sm:block bg-slate-800 border-b border-slate-700 px-8">
         <div className="flex gap-8">
-          {(['dashboard', 'transactions', 'categories', 'reports', 'budgets'] as Tab[]).map((tab) => (
+          {TABS.map(({ id, label }) => (
             <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`py-4 px-2 border-b-2 font-medium transition capitalize ${
-                activeTab === tab
+              key={id}
+              onClick={() => setActiveTab(id)}
+              className={`py-4 px-2 border-b-2 font-medium transition ${
+                activeTab === id
                   ? 'border-indigo-500 text-indigo-400'
                   : 'border-transparent text-slate-400 hover:text-white'
               }`}
             >
-              {tab}
+              {label}
             </button>
           ))}
         </div>
       </nav>
 
-      <main className="p-8">
+      {/* Padding bottom on mobile reserves space for the bottom nav */}
+      <main className="p-4 sm:p-8 pb-24 sm:pb-8">
         {error && (
-          <div className="mb-6 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+          <div className="mb-4 sm:mb-6 rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
             {error}
             <button
               onClick={() => setError(null)}
@@ -141,16 +154,12 @@ function App() {
           <p className="text-slate-400">Loading…</p>
         ) : (
           <>
+            <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">{activeMeta.label}</h2>
             {activeTab === 'dashboard' && (
-              <div>
-                <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
-                <Dashboard transactions={transactions} categories={categories} />
-              </div>
+              <Dashboard transactions={transactions} categories={categories} />
             )}
-
             {activeTab === 'transactions' && (
-              <div>
-                <h2 className="text-2xl font-bold mb-6">Transactions</h2>
+              <>
                 <TransactionForm
                   categories={categories}
                   onAddTransaction={addTransaction}
@@ -166,40 +175,54 @@ function App() {
                   onDeleteTransaction={deleteTransaction}
                   onEditTransaction={startEdit}
                 />
-              </div>
+              </>
             )}
-
             {activeTab === 'categories' && (
-              <div>
-                <h2 className="text-2xl font-bold mb-6">Categories</h2>
-                <CategoriesManager
-                  categories={categories}
-                  onAddCategory={addCategory}
-                  onDeleteCategory={deleteCategory}
-                />
-              </div>
+              <CategoriesManager
+                categories={categories}
+                onAddCategory={addCategory}
+                onDeleteCategory={deleteCategory}
+              />
             )}
-
             {activeTab === 'reports' && (
-              <div>
-                <h2 className="text-2xl font-bold mb-6">Reports</h2>
-                <Reports transactions={transactions} categories={categories} />
-              </div>
+              <Reports transactions={transactions} categories={categories} />
             )}
-
             {activeTab === 'budgets' && (
-              <div>
-                <h2 className="text-2xl font-bold mb-6">Budget Limits</h2>
-                <BudgetLimits
-                  categories={categories}
-                  transactions={transactions}
-                  onUpdateBudget={updateBudget}
-                />
-              </div>
+              <BudgetLimits
+                categories={categories}
+                transactions={transactions}
+                onUpdateBudget={updateBudget}
+              />
             )}
           </>
         )}
       </main>
+
+      {/* Mobile bottom nav. pb-safe via env() so it sits above the home indicator on iOS. */}
+      <nav
+        className="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-800/95 backdrop-blur border-t border-slate-700"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      >
+        <div className="grid grid-cols-5">
+          {TABS.map(({ id, label, icon: Icon }) => {
+            const active = activeTab === id
+            return (
+              <button
+                key={id}
+                onClick={() => setActiveTab(id)}
+                className={`flex flex-col items-center justify-center gap-1 py-2 min-h-[60px] transition ${
+                  active ? 'text-indigo-400' : 'text-slate-400 active:text-white'
+                }`}
+                aria-label={label}
+                aria-current={active ? 'page' : undefined}
+              >
+                <Icon size={22} />
+                <span className="text-[10px] font-semibold tracking-wide">{label}</span>
+              </button>
+            )
+          })}
+        </div>
+      </nav>
     </div>
   )
 }

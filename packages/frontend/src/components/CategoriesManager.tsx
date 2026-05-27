@@ -60,7 +60,7 @@ export function CategoriesManager({ categories, onAddCategory, onDeleteCategory 
           <div className="absolute inset-0 bg-gradient-to-br from-slate-700/60 via-slate-800 to-slate-900 border border-slate-700/60"></div>
 
           {/* Content */}
-          <div className="relative z-10 p-8">
+          <div className="relative z-10 p-4 sm:p-8">
             <div className="flex items-center gap-2 mb-8">
               <Sparkles size={24} className="text-indigo-400" />
               <h3 className="text-lg font-bold text-slate-100 uppercase tracking-wider">Create New Category</h3>
@@ -147,7 +147,8 @@ export function CategoriesManager({ categories, onAddCategory, onDeleteCategory 
                 </div>
                 <button
                   onClick={() => onDeleteCategory(cat.id)}
-                  className="text-slate-500 hover:text-red-400 hover:bg-red-400/10 rounded-lg p-2 transition-all opacity-0 group-hover:opacity-100"
+                  className="text-slate-500 hover:text-red-400 hover:bg-red-400/10 active:text-red-400 rounded-lg p-2.5 transition-all sm:opacity-0 sm:group-hover:opacity-100"
+                  aria-label={`Delete ${cat.name}`}
                   title="Delete category"
                 >
                   <Trash2 size={18} />

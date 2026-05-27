@@ -123,7 +123,7 @@ export function TransactionForm({ categories, onAddTransaction, onAddCategory, e
           <div className="absolute inset-0 bg-gradient-to-br from-slate-700/60 via-slate-800 to-slate-900 border border-slate-700/60"></div>
 
           {/* Content */}
-          <form onSubmit={handleSubmit} className="relative z-10 p-8 space-y-6">
+          <form onSubmit={handleSubmit} className="relative z-10 p-4 sm:p-8 space-y-5 sm:space-y-6">
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-lg font-bold text-slate-100 uppercase tracking-wider">
                 {editingTransaction ? 'Edit Transaction' : 'New Transaction'}
@@ -182,6 +182,7 @@ export function TransactionForm({ categories, onAddTransaction, onAddCategory, e
                     <input
                       type="number"
                       step="0.01"
+                      inputMode="decimal"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
                       placeholder="0.00"

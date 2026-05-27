@@ -115,7 +115,7 @@ export function BudgetLimits({ categories, transactions, onUpdateBudget }: Budge
               style={{ backgroundColor: cat.color }}
             />
 
-            <div className="pl-4 pr-6 py-6">
+            <div className="pl-4 pr-4 sm:pr-6 py-4 sm:py-6">
               <div className="flex items-start justify-between mb-5">
                 <div className="flex items-center gap-4">
                   <div
@@ -180,6 +180,7 @@ export function BudgetLimits({ categories, transactions, onUpdateBudget }: Budge
                       <input
                         type="number"
                         step="0.01"
+                        inputMode="decimal"
                         value={editValue}
                         onChange={(e) => setEditValue(e.target.value)}
                         placeholder="0.00"
