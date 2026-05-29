@@ -22,6 +22,7 @@ services:
       dockerfile: Dockerfile
       args:
         VITE_API_URL: ""
+        GIT_SHA: ${GIT_SHA:-dev}
     restart: unless-stopped
     env_file: .env.docker
     environment:

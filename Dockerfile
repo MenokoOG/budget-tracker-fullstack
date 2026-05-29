@@ -13,9 +13,13 @@ RUN npm install --workspaces --include-workspace-root
 ############################
 FROM node:20-alpine AS frontend-build
 WORKDIR /app
-# Cache invalidation: 2026-05-27 VITE_API_URL fix
 COPY --from=deps /app/node_modules ./node_modules
 COPY package.json package-lock.json* ./
+# GIT_SHA changes on every commit, so this RUN layer (and everything after it,
+# including the frontend source COPY + build) is forced to re-run on each new
+# deploy. A bare comment cannot bust the build cache; a changing ARG can.
+ARG GIT_SHA=dev
+RUN echo "frontend build for commit ${GIT_SHA}"
 COPY packages/frontend ./packages/frontend
 ARG VITE_API_URL=""
 ENV VITE_API_URL=${VITE_API_URL}
@@ -29,6 +33,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/package.json /app/package-lock.json* ./
 COPY --from=deps /app/packages/api/package.json ./packages/api/
+ARG GIT_SHA=dev
+RUN echo "api build for commit ${GIT_SHA}"
 COPY --from=deps /app/packages/api ./packages/api
 RUN npm run build --workspace=@budget-tracker/api
 
