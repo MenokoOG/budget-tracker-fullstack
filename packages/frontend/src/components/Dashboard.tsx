@@ -102,15 +102,17 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
     return totalIncome - totalSpent;
   }, [totalIncome, totalSpent]);
 
-  // Monthly Trend (last 6 months)
+  // Monthly Income vs Expense (last 6 months).
+  // amount is always a positive magnitude; `type` carries the direction, so we
+  // bucket income and expense separately rather than summing them together.
   const monthlyData = useMemo(() => {
-    const months: { [key: string]: number } = {};
+    const months: { [key: string]: { income: number; expense: number } } = {};
     const now = new Date();
 
     for (let i = 5; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
       const key = d.toLocaleString("default", { month: "short", year: "2-digit" });
-      months[key] = 0;
+      months[key] = { income: 0, expense: 0 };
     }
 
     transactions.forEach((t) => {
@@ -119,17 +121,30 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
         month: "short",
         year: "2-digit",
       });
-      if (key in months) months[key] += t.amount;
+      if (key in months) {
+        if (t.type === "income") months[key].income += t.amount;
+        else months[key].expense += t.amount;
+      }
     });
 
+    const labels = Object.keys(months);
     return {
-      labels: Object.keys(months),
+      labels,
       datasets: [
         {
-          label: "Spending",
-          data: Object.values(months),
-          borderColor: "#4f46e5",
-          backgroundColor: "rgba(79, 70, 229, 0.1)",
+          label: "Income",
+          data: labels.map((k) => months[k].income),
+          borderColor: "#10b981",
+          backgroundColor: "rgba(16, 185, 129, 0.1)",
+          borderWidth: 2,
+          fill: true,
+          tension: 0.3,
+        },
+        {
+          label: "Expense",
+          data: labels.map((k) => months[k].expense),
+          borderColor: "#f97316",
+          backgroundColor: "rgba(249, 115, 22, 0.1)",
           borderWidth: 2,
           fill: true,
           tension: 0.3,
@@ -151,6 +166,7 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
       .filter((t) => {
         const tDate = new Date(t.date);
         return (
+          t.type === "expense" &&
           tDate.getMonth() === now.getMonth() &&
           tDate.getFullYear() === now.getFullYear()
         );
@@ -184,12 +200,14 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
   const topCategoriesData = useMemo(() => {
     const catTotals: { [key: string]: number } = {};
 
-    transactions.forEach((t) => {
-      const cat = categoryMap.get(t.categoryId);
-      if (cat) {
-        catTotals[cat.name] = (catTotals[cat.name] || 0) + t.amount;
-      }
-    });
+    transactions
+      .filter((t) => t.type === "expense")
+      .forEach((t) => {
+        const cat = categoryMap.get(t.categoryId);
+        if (cat) {
+          catTotals[cat.name] = (catTotals[cat.name] || 0) + t.amount;
+        }
+      });
 
     const sorted = Object.entries(catTotals)
       .sort(([, a], [, b]) => b - a)
@@ -317,7 +335,7 @@ export function Dashboard({ transactions, categories }: DashboardProps) {
         <div className="relative rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-slate-700/60 via-slate-800 to-slate-900 border border-slate-700/60">
           <div className="relative z-10 p-4 sm:p-6">
             <h3 className="text-sm font-bold text-slate-200 mb-4 uppercase tracking-wider">
-              6-Month Trend
+              6-Month Income vs Expense
             </h3>
             <Line data={monthlyData} options={chartOptions} height={60} />
           </div>
